@@ -5,7 +5,7 @@ module.exports = {
 
     aFolder: process.cwd()+ '/src/assets',
     styleFile: process.cwd()+ '/src/sprite.less',
-    spriteFile: process.cwd()+ '/src/assets/sprite.png',
+    spriteFile: process.cwd()+ '/src/sprites/sprite.png',
 
     pieces: '*@px',//默认值为空
     prefix: 'icon',//默认值为空

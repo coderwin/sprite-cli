@@ -7,11 +7,58 @@ templater.addTemplate('sprite', require(path.join(__dirname, 'templates/sprite.j
 
 var util = require('./util');
 
-function CreateSprite(options){
-    this.initOptions(options);
-}
+function CreateSprite(options){}
 var createProto = CreateSprite.prototype;
-createProto.initOptions = function(options){
+
+createProto.run = function(options){
+    this.initOptions(options);
+    var self = this;
+    var items = fs.readdirSync(self.aFolder);
+    var files = items.filter(function (item) {
+        var sName = item.split('.')[0]; if(!sName) return false;
+        var tName = self.tSpriteFile.split("/").pop().split(".")[0];
+        return self.aExtname.indexOf(path.extname(item))>-1&&(item)&&sName!=tName;
+    }).map(function (item) {
+        return self.aFolder + '/' + item;
+    });
+
+    this.createSpriteImage(files);
+};
+createProto.initOptions = function(opt){
+    var dconfig = {};
+    try {
+        var CONFIG_PATH = process.argv[2].split("=")[1];
+        dconfig = require(CONFIG_PATH)
+    } catch (e) {
+        util.error(e.message+"!use the default config to create sprite");
+    }
+
+    var config = Object.assign(require('./config'),dconfig, opt);
+    var targetOptions = {
+        styleFile: config.styleFile,
+        spriteFile: config.spriteFile,
+        fix4Pieces: config.fix4Pieces,
+        styleTemplate: {
+            format: 'sprite',
+            pieces: config.pieces,
+            formatOpts: {
+                'cssClass': config.prefix,
+                'connector': config.connector,
+                'processor': config.processor
+            }
+        },
+    };
+    var options = {
+        aPadding: config.aPadding,
+        aExtname: config.aExtname,
+        aAlgorithm: config.aAlgorithm,
+        aFolder: config.aFolder,
+        target: targetOptions
+    };
+    this.initConstructor(options);
+}
+createProto.initConstructor = function(options){
+    
     this.aFolder = options.aFolder;
     this.aPadding = options.aPadding;
     this.aAlgorithm = options.aAlgorithm;
@@ -33,24 +80,10 @@ createProto.initOptions = function(options){
     util.info("target:", "spriteFile: " + this.tSpriteFile)
     console.log();
 }
-createProto.run = function(){
-    var self = this;
-    var items = fs.readdirSync(self.aFolder);
-    var files = items.filter(function (item) {
-        var sName = item.split('.')[0];
-        var tName = self.tSpriteFile.split("/").pop().split(".")[0];
-        return self.aExtname.indexOf(path.extname(item))>-1&&(item)&&sName!=tName;
-    }).map(function (item) {
-        return self.aFolder + '/' + item;
-    });
-
-    this.createSpriteImage(files);
-};
 createProto.createSpriteImage = function(files){
     var self = this;
     if(fs.existsSync(self.tSpriteFile)) fs.unlinkSync(self.tSpriteFile);
-    spritesmith.run(Object.assign({
-        src: files}, self.aAlgorithm, self.aExtname), function(err, result) {
+    spritesmith.run(Object.assign({src: files},{algorithm: this.aAlgorithm},{padding: this.aPadding}), function(err, result) {
         util.info('spriteFile:', JSON.stringify(result.properties));
         console.log()
 
@@ -75,12 +108,11 @@ createProto.createSpriteImage = function(files){
                 imageminMozjpeg(),
                 imageminSvgo(),
                 imageminPngquant(),
-                imageminOptipng(),
-                imageminWebp({quality: 100})
+                imageminOptipng()
             ]
         }).then(function() {
-            console.log('Images optimized');
             console.log()
+            console.log('Images optimized');
             util.info("create:", "spriteFile: "+self.tSpriteFile)
 
             self.createSpriteStyle(result);
@@ -110,37 +142,14 @@ createProto.createSpriteStyle = function(result){
     util.info('create:', "styleFile: " + self.tStyleFile);
     console.log("\nsuccess\n");
 }
-var config = {};
-try {
-    var CONFIG_PATH = process.argv[2].split("=")[1];
-    config = require(CONFIG_PATH)
-} catch (e) {
-    util.error(e.message+"!use the default config to create sprite");
-}
+var spriteInstance = new CreateSprite();
 
-config = Object.assign(require('./config'),config);
-var targetOptions = {
-    styleFile: config.styleFile,
-    spriteFile: config.spriteFile,
-    fix4Pieces: config.fix4Pieces,
-    styleTemplate: {
-        format: 'sprite',
-        pieces: config.pieces,
-        formatOpts: {
-            'cssClass': config.prefix,
-            'connector': config.connector,
-            'processor': config.processor
-        }
-    },
-};
-var spriteInstance = new CreateSprite({
-    aPadding: config.aPadding,
-    aExtname: config.aExtname,
-    aAlgorithm: config.aAlgorithm,
-    aFolder: config.aFolder,
-    target: targetOptions
-});
-
-// spriteInstance.run();
+// spriteInstance.run({
+//     aPadding: config.aPadding,
+//     aExtname: config.aExtname,
+//     aAlgorithm: config.aAlgorithm,
+//     aFolder: config.aFolder,
+//     target: targetOptions
+// });
 
 module.exports = spriteInstance
