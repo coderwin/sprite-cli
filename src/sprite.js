@@ -141,8 +141,8 @@ var spriteInstance = new CreateSprite({
     target: targetOptions
 });
 
-spriteInstance.run();
+// spriteInstance.run();
 
-// module.exports = function(){
-//   spriteInstance.run();
-// };
+module.exports = function(){
+    retrun spriteInstance;
+};
