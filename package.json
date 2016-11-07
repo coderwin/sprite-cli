@@ -2,7 +2,7 @@
   "name": "sprite-plugin",
   "version": "0.1.0",
   "description": "Build sprite images and css sheets on the fly",
-  "main": "index.js",
+  "main": "src/sprite.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

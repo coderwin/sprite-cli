@@ -1,12 +1,13 @@
+//node example.js
 var sprite = require('./src/sprite');
 sprite.run({
 	aPadding: 1,//默认值为空
     aExtname: '.png',//默认值为.png|.jpg
     aAlgorithm: 'top-down',//默认值为binary-tree
 
-    aFolder: process.cwd()+ '/src/assets',//icon资源文件夹
-    styleFile: process.cwd()+ '/src/sprite.less',//输出样式文件
-    spriteFile: process.cwd()+ '/src/sprites/sprite.png',//输入雪碧图文件
+    aFolder: process.cwd()+ '/example/src/assets',//icon资源文件夹
+    styleFile: process.cwd()+ '/example/src/sprite.less',//输出样式文件
+    spriteFile: process.cwd()+ '/example/src/sprites/sprite.png',//输入雪碧图文件
 
     pieces: '*@px',//单位 默认值为空
     prefix: 'icon',//class前缀 默认值为空
