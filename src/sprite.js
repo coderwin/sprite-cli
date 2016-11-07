@@ -143,6 +143,4 @@ var spriteInstance = new CreateSprite({
 
 // spriteInstance.run();
 
-module.exports = function(){
-    retrun spriteInstance;
-};
+module.exports = spriteInstance
