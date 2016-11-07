@@ -6,13 +6,13 @@ Build sprite images and css sheets on the fly
 * if you use in command line
 
 ```
-node sprite-plugin/index -config=config.json
+node nodu_modules/sprite-plugin/src/sprite -config=config.json
 //config.json is not requied
 ```
 * if you use in webpack
 
 ```
-prerelease: 'node sprite-plugin/index -config=config.json',
+prerelease: 'node nodu_modules/sprite-plugin/src/sprite -config=config.json',
 release: 'webpack --config webpack.release.js'
 ```
 or you can this:
@@ -22,7 +22,7 @@ or you can this:
 
 function SpritePlugin() {}
 SpritePlugin.prototype.apply = function(compiler) {
-    var sprite = require('./sprite.plugin');
+    var sprite = require('sprite.plugin');
 	sprite.run({
 		aPadding: 1,//默认值为空
 	    aExtname: '.png',//默认值为.png|.jpg
