@@ -1,7 +1,7 @@
 //node example.js
 var sprite = require('./src/sprite');
 sprite.run({
-	aPadding: 1,//默认值为空
+aPadding: 1,//默认值为空
     aExtname: '.png',//默认值为.png|.jpg
     aAlgorithm: 'top-down',//默认值为binary-tree
 
