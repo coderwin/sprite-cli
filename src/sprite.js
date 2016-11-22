@@ -30,7 +30,7 @@ createProto.initOptions = function(opt){
         var CONFIG_PATH = process.argv[2].split("=")[1];
         dconfig = require(CONFIG_PATH)
     } catch (e) {
-        util.error(e.message+"!use the default config to create sprite");
+        util.info(e.message+"!use the default config to create sprite");
     }
 
     var config = Object.assign(require('./config'),dconfig, opt);
