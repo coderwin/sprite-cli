@@ -16,7 +16,8 @@ function cssTemplate (params) {
   var items = params.items;
   var options = params.options;
   var tmpName = options.cssClass;
-  var template = { items: [] };
+  var template = { items: [], sprites: params.spritesheet};
+
   items.forEach(function saveClass (item) {
     item.image = item.image.replace(/\\/g, '\/');
     item.escaped_image = item.escaped_image.replace(/\\/g, '\/');
@@ -24,6 +25,7 @@ function cssTemplate (params) {
     if (item.name) {
       item['class'] = '.' + cssesc(item.name, {isIdentifier: true});
     };
+    item.pieces = params.spritesheet.pieces;
     template.items.push(item);
   });
   var tmplFile = tmpl[options.processor];

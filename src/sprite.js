@@ -135,7 +135,8 @@ createProto.createSpriteStyle = function(result){
         spritesheet: {
             image: path.relative(path.join(self.tStyleFile, "../"), self.tSpriteFile),
             width: result.properties.width,
-            height: result.properties.height
+            height: result.properties.height,
+            pieces: this.tStyleTemplate.pieces
         }
     }, self.tStyleTemplate);
     fs.writeFileSync(self.tStyleFile, this.fix4Pieces+ "\n" + styles);
