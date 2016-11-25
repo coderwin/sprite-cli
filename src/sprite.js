@@ -27,7 +27,7 @@ createProto.run = function(options){
 createProto.initOptions = function(opt){
     var dconfig = {};
     try {
-        var CONFIG_PATH = process.argv[2].split("=")[1];
+        var CONFIG_PATH = path.join(process.cwd(), process.argv[2].split("=")[1]);
         dconfig = require(CONFIG_PATH)
     } catch (e) {
         util.info("warning: ", e.message+"!use the default config to create sprite");
