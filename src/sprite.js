@@ -1,156 +1,227 @@
-var fs = require('fs');
-var path = require('path');
-var spritesmith = require('spritesmith');
-var templater = require('spritesheet-templates');
-//自定义template
-templater.addTemplate('sprite', require(path.join(__dirname, 'templates/sprite.js')));
+let fs = require('fs')
+let path = require('path')
+let spritesmith = require('spritesmith')
+let templater = require('spritesheet-templates')
+let log = require('./log')
+let chalk = require('chalk')
 
-var util = require('./util');
+// template
+let tpl = require(path.join(__dirname, 'templates/sprite'))
+templater.addTemplate('sprite', tpl)
 
-function CreateSprite(options){}
-var createProto = CreateSprite.prototype;
+class CreateSprite {
 
-createProto.run = function(options){
-    this.initOptions(options);
-    var self = this;
-    var items = fs.readdirSync(self.aFolder);
-    var files = items.filter(function (item) {
-        var sName = item.split('.')[0]; if(!sName) return false;
-        var tName = self.tSpriteFile.split("/").pop().split(".")[0];
-        return self.aExtname.indexOf(path.extname(item))>-1&&(item)&&sName!=tName;
-    }).map(function (item) {
-        return self.aFolder + '/' + item;
-    });
+  // constructor
+  constructor() {
 
-    this.createSpriteImage(files);
-};
-createProto.initOptions = function(opt){
-    var dconfig = {};
-    try {
-        var CONFIG_PATH = path.join(process.cwd(), process.argv[2].split("=")[1]);
-        dconfig = require(CONFIG_PATH)
-    } catch (e) {
-        util.info("warning: ", e.message+"!use the default config to create sprite");
+  }
+
+  // run make
+  run(options) {
+    this.options = options
+
+    this.printStart()
+    this.initOptions(options)
+    this.createSpriteImage(this.filterAssets())
+  }
+
+  // init config
+  initOptions({
+    styleFile,
+    spriteFile,
+    fix4Pieces,
+    pieces,
+    prefix,
+    connector,
+    processor,
+    aPadding,
+    aExtname,
+    aAlgorithm,
+    aFolder
+  }) {
+
+    let targetOptions = {
+      styleFile: styleFile,
+      spriteFile: spriteFile,
+      fix4Pieces: fix4Pieces,
+      styleTemplate: {
+        format: 'sprite',
+        pieces: pieces,
+        formatOpts: {
+          'cssClass': prefix,
+          'connector': connector,
+          'processor': processor
+        }
+      }
     }
+    let options = {
+      aPadding: aPadding,
+      aExtname: aExtname,
+      aAlgorithm: aAlgorithm,
+      aFolder: aFolder,
+      target: targetOptions,
+    }
+    this.initConstructor(options)
+  }
 
-    var config = Object.assign(require('./config'),dconfig, opt);
-    var targetOptions = {
-        styleFile: config.styleFile,
-        spriteFile: config.spriteFile,
-        fix4Pieces: config.fix4Pieces,
-        styleTemplate: {
-            format: 'sprite',
-            pieces: config.pieces,
-            formatOpts: {
-                'cssClass': config.prefix,
-                'connector': config.connector,
-                'processor': config.processor
-            }
-        },
-    };
-    var options = {
-        aPadding: config.aPadding,
-        aExtname: config.aExtname,
-        aAlgorithm: config.aAlgorithm,
-        aFolder: config.aFolder,
-        target: targetOptions
-    };
-    this.initConstructor(options);
-}
-createProto.initConstructor = function(options){
-    
-    this.aFolder = options.aFolder;
-    this.aPadding = options.aPadding;
-    this.aAlgorithm = options.aAlgorithm;
-    this.aExtname = options.aExtname || '.png|.jpg';
+  // init config into constructr
+  initConstructor({
+    aFolder,
+    aPadding,
+    aAlgorithm,
+    aExtname = '.png|.jpg',
+    target,
+    formatFileName = function(filename) {
+      return filename.replace('@', ':')
+    }
+  }) {
+    this.aFolder = aFolder
+    this.aPadding = aPadding
+    this.aAlgorithm = aAlgorithm
+    this.aExtname = aExtname
 
-    this.tStyleFile = options.target.styleFile;
-    this.tSpriteFile = options.target.spriteFile;
-    this.tStyleTemplate = options.target.styleTemplate;
+    this.tStyleFile = target.styleFile
+    this.tSpriteFile = target.spriteFile
+    this.tStyleTemplate = target.styleTemplate
 
-    this.fix4Pieces = options.target.fix4Pieces;
+    this.fix4Pieces = target.fix4Pieces
 
-    this.formatFileName = options.formatFileName || function(filename) {
-        return filename.replace('@', ':');
-    };
-    console.log("\nstart\n");
+    this.formatFileName = formatFileName
 
-    util.info("assets:", "folder: " + this.aFolder)
-    util.info("target:", "styleFile: " + this.tStyleFile)
-    util.info("target:", "spriteFile: " + this.tSpriteFile)
-    console.log();
-}
-createProto.createSpriteImage = function(files){
-    var self = this;
-    if(fs.existsSync(self.tSpriteFile)) fs.unlinkSync(self.tSpriteFile);
-    spritesmith.run(Object.assign({src: files},{algorithm: this.aAlgorithm},{padding: this.aPadding}), function(err, result) {
-        util.info('spriteFile:', JSON.stringify(result.properties));
-        console.log()
+    log.log("\nstart\n")
+    log.info("assets:", "folder: " + this.aFolder)
+    log.info("target:", "styleFile: " + this.tStyleFile)
+    log.info("target:", "spriteFile: " + this.tSpriteFile)
+    log.log()
+  }
 
-        for (var k in result.coordinates) {
-            util.info(path.basename(k)+":", JSON.stringify(result.coordinates[k]));
+  // filter png/jpg images
+  filterAssets() {
+    return fs.readdirSync(this.aFolder).filter((item) => {
+      let sName = item.split('.')[0]
+      if (!sName) return false
+      let tName = this.tSpriteFile.split("/").pop().split(".")[0]
+      return item && path.extname(item) && this.aExtname.indexOf(path.extname(item)) > -1 && sName != tName
+    }).map((item) => {
+      return this.aFolder + '/' + item
+    })
+  }
+
+  // make sprite
+  createSpriteImage(files) {
+    if (fs.existsSync(this.tSpriteFile))
+      fs.unlinkSync(this.tSpriteFile)
+
+    spritesmith.run(Object.assign({
+      src: files
+    }, {
+      algorithm: this.aAlgorithm
+    }, {
+      padding: this.aPadding
+    }), (err, {
+      properties,
+      coordinates,
+      image
+    }) => {
+
+      log.info('spriteFile:', JSON.stringify(properties))
+      log.log()
+
+      for (let k in coordinates) {
+        log.info(path.basename(k) + ":", JSON.stringify(coordinates[k]))
+      }
+
+      fs.writeFileSync(this.tSpriteFile, image)
+
+      let imagemin = require('imagemin')
+
+      // optimized
+      // let imageminMozjpeg = require('imagemin-mozjpeg')
+      // let imageminOptipng = require('imagemin-optipng')
+      // let imageminPngout = require('imagemin-pngout')
+      // let imageminPngquant = require('imagemin-pngquant')
+      // let imageminAdvpng = require('imagemin-advpng')
+
+      imagemin([this.tSpriteFile], path.join(this.tSpriteFile, "../"), {
+        use: [
+          // imageminMozjpeg(),
+          // imageminPngquant(),
+          // imageminPngout(),
+          // imageminOptipng(),
+          // imageminAdvpng()
+        ]
+      }).then(() => {
+        log.log()
+        log.log('Images optimized')
+        log.info("create:", "spriteFile: " + this.tSpriteFile)
+
+        this.createSpriteStyle(properties, coordinates)
+      })
+
+    })
+  }
+
+  // make sprite style
+  createSpriteStyle(properties, coordinates) {
+    let styles = templater({
+      sprites: Object.keys(coordinates).map((key) => {
+        return {
+          name: this.formatFileName(path.basename(key).split('.')[0]),
+          x: coordinates[key].x,
+          y: coordinates[key].y,
+          width: coordinates[key].width,
+          height: coordinates[key].height,
         }
+      }),
+      spritesheet: {
+        image: path.relative(path.join(this.tStyleFile, "../"), this.tSpriteFile),
+        width: properties.width,
+        height: properties.height,
+        pieces: this.tStyleTemplate.pieces
+      }
+    }, this.tStyleTemplate)
 
-        fs.writeFileSync(self.tSpriteFile, result.image);
+    fs.writeFileSync(this.tStyleFile, (this.fix4Pieces || "") + "\n\n" + styles)
+    log.info('create:', "styleFile: " + this.tStyleFile)
+    this.printSuccess()
+  }
 
-        var imagemin = require('imagemin');
-        var imageminWebp = require('imagemin-webp');
-        var imageminGifsicle = require('imagemin-gifsicle');
-        var imageminMozjpeg = require('imagemin-mozjpeg');
-        var imageminOptipng = require('imagemin-optipng');
-        var imageminSvgo = require('imagemin-svgo');
-        var imageminPngquant = require('imagemin-pngquant');
-        imagemin([self.tSpriteFile], path.join(self.tSpriteFile,"../"), {
-            use: [
-                imageminGifsicle({
-                    interlaced: false
-                }),
-                imageminMozjpeg(),
-                imageminSvgo(),
-                imageminPngquant(),
-                imageminOptipng()
-            ]
-        }).then(function() {
-            console.log()
-            console.log('Images optimized');
-            util.info("create:", "spriteFile: "+self.tSpriteFile)
+  // success msg
+  printSuccess() {
+    let styleFilePath = `./${path.relative(process.cwd(), this.options.styleFile)}`
+    let spriteFilePath = `./${path.relative(process.cwd(), this.options.spriteFile)}`
+    let className = `${this.options.prefix + this.options.connector}your image name`
 
-            self.createSpriteStyle(result);
-        })
+    let styleFileUnderline = chalk.underline(styleFilePath)
+    let spriteImageUnderline = chalk.underline(spriteFilePath)
+    let classNameBgBlack = chalk.bgBlack(className)
+    log.success(`
+Handle Success! 
+  Build sprite styleFile in ${styleFileUnderline}
+  Build sprite spriteImage in ${spriteImageUnderline}
+  Import the styleFile in your style file(import only once)
+  and use the '${classNameBgBlack}' as the class name
+  You can join sprite as the predev/prerelease/prebuild...
+  Happy coding!`)
+  }
 
-    });
-};
-createProto.createSpriteStyle = function(result){
-    var self = this;
-    var styles = templater({
-        sprites: Object.keys(result.coordinates).map(function(key) {
-            return {
-                name: self.formatFileName(path.basename(key).split('.')[0]),
-                x: result.coordinates[key].x,
-                y: result.coordinates[key].y,
-                width: result.coordinates[key].width,
-                height: result.coordinates[key].height,
-            }
-        }),
-        spritesheet: {
-            image: path.relative(path.join(self.tStyleFile, "../"), self.tSpriteFile),
-            width: result.properties.width,
-            height: result.properties.height,
-            pieces: this.tStyleTemplate.pieces
-        }
-    }, self.tStyleTemplate);
-    fs.writeFileSync(self.tStyleFile, this.fix4Pieces+ "\n" + styles);
-    util.info('create:', "styleFile: " + self.tStyleFile);
-    console.log("\nsuccess\n");
+  // start msg
+  printStart() {
+    this.showLog = this.options.showLog || false
+    if (!this.showLog) {
+      let aFolderPath = `./${path.relative(process.cwd(), this.options.aFolder)}`
+      let aFolderUnderline = chalk.underline(aFolderPath)
+      let processorInverse = chalk.inverse(this.options.processor)
+
+      console.log(`
+Handle Start...
+  Building from ${aFolderUnderline}
+  and Building ${processorInverse} as the style processor`)
+      log.log = function() {}
+      log.info = function() {}
+      log.error = function() {}
+    }
+  }
 }
-var spriteInstance = new CreateSprite();
 
-// spriteInstance.run({
-//     aPadding: config.aPadding,
-//     aExtname: config.aExtname,
-//     aAlgorithm: config.aAlgorithm,
-//     aFolder: config.aFolder,
-//     target: targetOptions
-// });
-
-module.exports = spriteInstance
+module.exports = new CreateSprite()

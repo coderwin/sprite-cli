@@ -1,5 +1,5 @@
 {{#items}}
-@{{name}}: {{offset_x}}*{{pieces}}, {{offset_y}}*{{pieces}}, {{width}}*{{pieces}}, {{height}}*{{pieces}};
+@{{name}}: {{offset_x}}{{pieces}}, {{offset_y}}{{pieces}}, {{width}}{{pieces}}, {{height}}{{pieces}};
 {{/items}}
 
 .sprite-width(@sprite) {
@@ -20,7 +20,7 @@
   .sprite-position(@sprite);
   background-repeat: no-repeat;
   overflow: hidden;
-  display: block;
+  display: inline-block;
   .sprite-width(@sprite);
   .sprite-height(@sprite);
   background-size: {{sprites.width}}*@px {{sprites.height}}*@px

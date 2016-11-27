@@ -1,15 +1,47 @@
+// spriterc example
+
 module.exports = {
-    aPadding: 0,//默认值为空
-    aExtname: '.png',//默认值为.png|.jpg
-    aAlgorithm: 'binary-tree',//默认值为binary-tree
+  aPadding: 5,
+  aExtname: '.png',
+  aAlgorithm: 'binary-tree',
 
-    aFolder: process.cwd()+ '/src/assets',
-    styleFile: process.cwd()+ '/src/sprite.less',
-    spriteFile: process.cwd()+ '/src/sprites/sprite.png',
+  aFolder: process.cwd() + '/assets',
+  styleFile: process.cwd() + '/assets/build/sprite.less',
+  spriteFile: process.cwd() + '/assets/build/sprite.png',
 
-    pieces: '*@px',//默认值为空
-    prefix: 'icon',//默认值为空
-    connector: '-',//默认值为空
-    processor: "less",//默认值为css
-    fix4Pieces: '@px: 320/750/16*1rem;@percent: 100/750*1%;',//默认值为空
-};
+  pieces: '*@px',
+  prefix: 'icon',
+  connector: '-',
+  processor: "less",
+  fix4Pieces: '@px: 320/750/16*1rem;@percent: 100/750*1%;'
+}
+
+module.exports = {
+  aPadding: 5,
+  aExtname: '.png',
+  aAlgorithm: 'binary-tree',
+
+  aFolder: process.cwd() + '/assets',
+  styleFile: process.cwd() + '/assets/build/sprite.css',
+  spriteFile: process.cwd() + '/assets/build/sprite.png',
+
+  prefix: 'icon',
+  connector: '-',
+  processor: "css"
+}
+
+module.exports = {
+  aPadding: 5,
+  aExtname: '.png',
+  aAlgorithm: 'binary-tree',
+
+  aFolder: process.cwd() + '/assets',
+  styleFile: process.cwd() + '/assets/build/sprite.sass',
+  spriteFile: process.cwd() + '/assets/build/sprite.png',
+
+  pieces: '*@px',
+  prefix: 'icon',
+  connector: '-',
+  processor: "sass",
+  fix4Pieces: '@px: 320/750/16*1rem;@percent: 100/750*1%;',
+}

@@ -1,14 +1,14 @@
 {
-  "name": "sprite-plugin",
+  "name": "sprite-cli",
   "version": "0.1.0",
   "description": "Build sprite images and css sheets on the fly",
-  "main": "index.js",
+  "main": "src/sprite.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coderwin/sprite.plugin.git"
+    "url": "git+https://github.com/coderwin/sprite-cli.git"
   },
   "keywords": [
     "sprite",
@@ -17,19 +17,13 @@
   "author": "imChenJian",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/coderwin/sprite.plugin/issues"
+    "url": "https://github.com/coderwin/sprite-cli/issues"
   },
-  "homepage": "https://github.com/coderwin/sprite.plugin#readme",
+  "homepage": "https://github.com/coderwin/sprite-cli#readme",
   "dependencies": {
     "chalk": "^1.1.3",
-    "cssesc": "^1.0.0",
+    "commander": "^2.9.0",
     "imagemin": "^5.2.2",
-    "imagemin-gifsicle": "^5.1.0",
-    "imagemin-mozjpeg": "^6.0.0",
-    "imagemin-optipng": "^5.2.1",
-    "imagemin-pngquant": "^5.0.0",
-    "imagemin-svgo": "^5.2.0",
-    "imagemin-webp": "^4.0.0",
     "left-pad": "^1.1.3",
     "mustache": "^2.2.1",
     "spritesheet-templates": "^10.1.4",
