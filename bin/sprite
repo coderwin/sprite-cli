@@ -6,7 +6,6 @@ let path = require('path')
 let Sprite = require('../src/sprite')
 
 commander
-	.command('sprite')
 	.usage('build [options] ==> sprite flow')
 	.version(require('../package').version, '-v, --version')
 	.option('-c, --config [value]', '设置sprite处理配置文件.spriterc')

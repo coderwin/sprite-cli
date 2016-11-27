@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Build sprite images and css sheets on the fly",
   "main": "src/sprite.js",
+  "preferGlobal": "true",
   "bin": {
     "sprite": "./bin/sprite"
   },
