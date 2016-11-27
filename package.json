@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Build sprite images and css sheets on the fly",
   "main": "src/sprite.js",
+  "bin": {
+    "sprite": "./bin/sprite"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
