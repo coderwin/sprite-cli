@@ -5,9 +5,9 @@ module.exports = {
   aExtname: '.png',
   aAlgorithm: 'binary-tree',
 
-  aFolder: process.cwd() + '/assets',
-  styleFile: process.cwd() + '/assets/build/sprite.less',
-  spriteFile: process.cwd() + '/assets/build/sprite.png',
+  aFolder: process.cwd() + '/example/assets',
+  styleFile: process.cwd() + '/example/build/sprite.less',
+  spriteFile: process.cwd() + '/example/build/sprite.png',
 
   pieces: '*@px',
   prefix: 'icon',
@@ -21,9 +21,9 @@ module.exports = {
   aExtname: '.png',
   aAlgorithm: 'binary-tree',
 
-  aFolder: process.cwd() + '/assets',
-  styleFile: process.cwd() + '/assets/build/sprite.css',
-  spriteFile: process.cwd() + '/assets/build/sprite.png',
+  aFolder: process.cwd() + '/example/assets',
+  styleFile: process.cwd() + '/example/build/sprite.css',
+  spriteFile: process.cwd() + '/example/build/sprite.png',
 
   prefix: 'icon',
   connector: '-',
@@ -35,9 +35,9 @@ module.exports = {
   aExtname: '.png',
   aAlgorithm: 'binary-tree',
 
-  aFolder: process.cwd() + '/assets',
-  styleFile: process.cwd() + '/assets/build/sprite.sass',
-  spriteFile: process.cwd() + '/assets/build/sprite.png',
+  aFolder: process.cwd() + '/example/assets',
+  styleFile: process.cwd() + '/example/build/sprite.sass',
+  spriteFile: process.cwd() + '/example/build/sprite.png',
 
   pieces: '*@px',
   prefix: 'icon',
