@@ -29,8 +29,14 @@ let config = {}
 if (commander.args[0] == 'build') {
 
 	if (commander.config) {
-		let runconfig = require(path.join(process.cwd(), commander.config))
-		Sprite.run(runconfig)
+		let configs = require('../src/scanDir')(process.cwd(), (commander.config||'.spriterc'))
+		console.log(configs)
+		configs.map((item, index)=>{
+			let runconfig = require(item)
+			new Sprite().run(runconfig)
+		})
+		// let runconfig = require(path.join(process.cwd(), commander.config))
+		// Sprite.run(runconfig)
 		return
 	}
 	['aPadding', 'aExtname', 'aFolder', 'styleFile', 'spriteFile',
@@ -39,5 +45,5 @@ if (commander.args[0] == 'build') {
 		commander[item] && (config[item] = commander[item])
 	})
 
-	Sprite.run(config)
+	new Sprite().run(config)
 }

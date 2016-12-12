@@ -130,7 +130,6 @@ class CreateSprite {
       for (let k in coordinates) {
         log.info(path.basename(k) + ":", JSON.stringify(coordinates[k]))
       }
-
       fs.writeFileSync(this.tSpriteFile, image)
 
       let imagemin = require('imagemin')
@@ -224,4 +223,4 @@ Handle Start...
   }
 }
 
-module.exports = new CreateSprite()
+module.exports = CreateSprite
