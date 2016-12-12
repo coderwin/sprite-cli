@@ -1,6 +1,6 @@
 {
   "name": "sprite-cli",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Build sprite images and css sheets on the fly",
   "main": "src/sprite.js",
   "preferGlobal": "true",
