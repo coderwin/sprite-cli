@@ -12,7 +12,7 @@ module.exports = function find(path, name, file) {
    * node_modules
    * .git
    */
-  if(['.git','.idea','dist','test'].indexOf(file)=='-1'){
+  if(['.git','.idea','dist','test', 'node_modules'].indexOf(file)=='-1'){
     /**
      * 找到目标文件
      */
