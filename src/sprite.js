@@ -98,6 +98,9 @@ class CreateSprite {
   // filter png/jpg images
   filterAssets() {
     return fs.readdirSync(this.aFolder).filter((item) => {
+      if (path.normalize(path.join(this.aFolder, item)) == path.normalize(this.tSpriteFile))
+        return false;
+      
       let sName = item.split('.')[0]
       if (!sName) return false
       let tName = this.tSpriteFile.split("/").pop().split(".")[0]
